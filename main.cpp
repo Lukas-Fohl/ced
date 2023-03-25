@@ -41,11 +41,6 @@ void printBuffer(){
     color_set(1, 0);
 
     mvprintw(cursor[1],cursor[0]," ");
-    if(!(fileBufferSort.at(cursor[1]).size()<=1)){
-        mvprintw(cursor[1],cursor[0],"%c",fileBufferSort.at(cursor[1]).at(cursor[0]));
-    }else{
-        //mvprintw(cursor[1],100," ");
-    }
 
     color_set(2, 0);
     mvprintw(y-1,0,"F1");
@@ -63,6 +58,13 @@ void printBuffer(){
     mvprintw(y-1,20,"TO SAVE AND EXIT");
     color_set(2, 0);
     
+    color_set(1, 0);
+    mvprintw(y-1,x-7,"       ");
+    mvprintw(y-1,x-7,"%d",cursor[0]);
+    mvprintw(y-1,x-4,";");
+    mvprintw(y-1,x-3,"%d",cursor[1]);
+    color_set(2, 0);
+
     refresh();
 }
 
@@ -94,19 +96,19 @@ void runLoop(){
                 }
             break;
             case KEY_DOWN:
-                //down TODO get max size
+                //down
                 if(cursor[1]<MAXY-1){
-                    cursor[1]+=1;
-                    if(fileBufferSort.at(cursor[1]).size() == 1){
+                    cursor[1]++;
+                    if(fileBufferSort.at(cursor[1]).size() <= 1){
                         cursor[0] = 0;
                     }
                     else if(fileBufferSort.at(cursor[1]).size()-2<cursor[0]){
-                        cursor[0] = fileBufferSort.at(cursor[1]).size()-3;
+                        cursor[0] = fileBufferSort.at(cursor[1]).size()-2;
                     }
                 }
             break;
             case KEY_RIGHT:
-                //right TODO get lenght
+                //right
                 if((cursor[0]==fileBufferSort.at(cursor[1]).size()-2||fileBufferSort.at(cursor[1]).size() == 1)&&cursor[1]+1<MAXY-1){
                     cursor[0] = 0;
                     cursor[1] = cursor[1]+1;
@@ -144,15 +146,19 @@ void runLoop(){
                 cursor[0] = fileBufferSort.at(cursor[1]).size()-2;
             break;
             case KEY_DC:
-                //delete
-                //shift to left
+                delChar(&fileBufferSort.at(cursor[1]), cursor[0]);
             break;
             case KEY_BACKSPACE:
-                //Backspace
-                //shift to left
+                if(cursor[0]-1>=0){
+                    delChar(&fileBufferSort.at(cursor[1]), cursor[0]-1);
+                    cursor[0]--;
+                }
             break;
             case '\t':
-                //add 4 spaces
+                for(int i = 0; i < 4; i++){
+                    addChar(&fileBufferSort.at(cursor[1]), '\t', cursor[0]+i);
+                }
+                cursor[0]+=4;
             break;
             case KEY_F(1):
                 running =  false;
@@ -165,7 +171,6 @@ void runLoop(){
                 running =  false;
             break;
             default:
-                //fileBufferSort.at(cursor[1]).at(cursor[0]) = value_;
                 addChar(&fileBufferSort.at(cursor[1]), value_, cursor[0]);
             break;
         }

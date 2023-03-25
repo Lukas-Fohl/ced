@@ -47,9 +47,11 @@ void addChar(textLine *lineIn, char charIn, int index){
 }
 
 void delChar(textLine *lineIn, int index){
-    auto it = lineIn->begin();
-    std::advance(it, index);
-    lineIn->erase(it);
+    if(index != lineIn->size()-1){
+        auto it = lineIn->begin();
+        std::advance(it, index);
+        lineIn->erase(it);
+    }
 }
 
 void delLine(fullTextBuffer *FullBufferIn, int index){
