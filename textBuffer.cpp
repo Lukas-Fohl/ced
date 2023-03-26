@@ -27,17 +27,6 @@ void addLine(fullTextBuffer *FullBufferIn, int index){
     fullTextBuffer::iterator it = (fullTextBuffer::iterator)FullBufferIn->begin();
     std::advance(it, index);
     FullBufferIn->insert(it, TLTemp);
-
-    /*
-    fullTextBuffer temp = *FullBufferIn;
-    textLine TLtemp;
-    temp.push_back(FullBufferIn->at(index));
-    for(int i = temp.size(); i > index; i-=1){
-        temp.at(i) = temp.at(i-1);
-    }
-    temp.at(index) = FullBufferIn->at(index);//TLtemp
-    FullBufferIn = (fullTextBuffer*)&temp;
-    */
 }
 
 void addChar(textLine *lineIn, char charIn, int index){

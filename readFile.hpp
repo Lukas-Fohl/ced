@@ -4,6 +4,6 @@
 #include "textBuffer.hpp"
 
 char* readFromFile(char* fileName);
-void writeToFile(fullTextBuffer bufferIn, char* fileName);
+void writeToFile(fullTextBuffer *bufferIn, char* fileName);
 
 #endif

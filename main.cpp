@@ -15,7 +15,7 @@ char *fileBuffer;
 fullTextBuffer fileBufferSort;
 
 char *fileName;
-
+ 
 void quit()
 {
     endwin();
@@ -109,13 +109,15 @@ void runLoop(){
             break;
             case KEY_RIGHT:
                 //right
-                if((cursor[0]==fileBufferSort.at(cursor[1]).size()-2||fileBufferSort.at(cursor[1]).size() == 1)&&cursor[1]+1<MAXY-1){
-                    cursor[0] = 0;
-                    cursor[1] = cursor[1]+1;
-                    break;
-                }
-                if(!(fileBufferSort.at(cursor[1]).size() == 1)){
-                    cursor[0]+=(cursor[0]<fileBufferSort.at(cursor[1]).size()-2)?1:0;
+                if(fileBufferSort.at(cursor[1]).size()!=0){//because '\n' is alway there
+                    if((cursor[0]==fileBufferSort.at(cursor[1]).size()-2||(fileBufferSort.at(cursor[1]).size() == 1)&&cursor[1]+1<MAXY-1)){
+                        cursor[0] = 0;
+                        cursor[1] = cursor[1]+1;
+                        break;
+                    }
+                    if(!(fileBufferSort.at(cursor[1]).size() <= 1)){
+                        cursor[0]+=(cursor[0]<fileBufferSort.at(cursor[1]).size()-2)?1:0;
+                    }
                 }
             break;
             case KEY_LEFT:
@@ -132,8 +134,9 @@ void runLoop(){
                     cursor[0]-=(cursor[0]>=1)?1:0;
                 }
             break;
-            case KEY_ENTER:
+            case '\n':
                 addLine(&fileBufferSort, cursor[1]);
+                cursor[1]++;
             break;
             case KEY_HOME:  
                 cursor[0] = 0;
@@ -146,12 +149,37 @@ void runLoop(){
                 cursor[0] = fileBufferSort.at(cursor[1]).size()-2;
             break;
             case KEY_DC:
+                if(cursor[0] == fileBufferSort.at(cursor[1]).size()-2 && cursor[1]<MAXY-1){
+                    if(fileBufferSort.at(cursor[1]+1).size()==1){
+                        delLine(&fileBufferSort,cursor[1]+1);       
+                    }
+                    for(int i = 0; i < fileBufferSort.at(cursor[1]+1).size()-2; i++){
+                        addChar(&fileBufferSort.at(cursor[1]),fileBufferSort.at(cursor[1]+1).at(i),fileBufferSort.at(cursor[1]).size()-1);
+                    }
+                    delLine(&fileBufferSort,cursor[1]+1);   
+                    break;
+                }
                 delChar(&fileBufferSort.at(cursor[1]), cursor[0]);
             break;
             case KEY_BACKSPACE:
                 if(cursor[0]-1>=0){
                     delChar(&fileBufferSort.at(cursor[1]), cursor[0]-1);
                     cursor[0]--;
+                }else{
+                    if(cursor[1]>0){    
+                        if(fileBufferSort.at(cursor[1]).size()==1){
+                            delLine(&fileBufferSort,cursor[1]);   
+                            cursor[1]--;
+                            cursor[0] = fileBufferSort.at(cursor[1]).size()-2;
+                            break;
+                        }
+                        for(int i = 0; i < fileBufferSort.at(cursor[1]).size()-2; i++){
+                            addChar(&fileBufferSort.at(cursor[1]-1),fileBufferSort.at(cursor[1]).at(i),fileBufferSort.at(cursor[1]-1).size()-2);
+                        }
+                        delLine(&fileBufferSort,cursor[1]);   
+                        cursor[1]--;
+                        break;
+                    }
                 }
             break;
             case '\t':
@@ -164,10 +192,10 @@ void runLoop(){
                 running =  false;
             break;
             case KEY_F(2):
-                writeToFile(fileBufferSort, fileName);
+                writeToFile(&fileBufferSort, fileName);
             break;
             case KEY_F(3):
-                writeToFile(fileBufferSort, fileName);
+                writeToFile(&fileBufferSort, fileName);
                 running =  false;
             break;
             default:
@@ -194,7 +222,7 @@ int main(int argc, char *argv[])
     atexit(quit);
     keypad(stdscr, TRUE);
     start_color();
-    curs_set(true);
+    curs_set(false);
     cbreak();
     noecho();
     getmaxyx(stdscr, y, x);
@@ -215,6 +243,10 @@ int main(int argc, char *argv[])
     fileBuffer = readFromFile(fileName);
     CharsToFullTextBuffer(fileBuffer, &fileBufferSort);
 
+    if(fileBufferSort.size()==0){
+        addLine(&fileBufferSort,0);
+    }
+
     /***************/
     //RUN EDITOR LOOP
     /***************/
@@ -230,13 +262,13 @@ int main(int argc, char *argv[])
 //change buffer:
 //Display part of file                                      TODO
 //scorle                                                    TODO
+//save buffer                                           DONE
 //del                                                   DONE
 //add                                                   DONE
-//save buffer                                               TODO
-//File-Navigator                                            TODO
-//save and exit text                                        TODO
+//save and exit text                                    DONE
 //keys                                                  DONE
 //enter file-name                                       DONE
+//Line interaction                                      DONE
 //support for shortcuts                                     TODO
 //mark                                                      TODO
 //->cut, copy, past, del                                    TODO
