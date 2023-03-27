@@ -29,7 +29,7 @@ int32_t x, y;
 
 bool running = true;
 
-vec2 displayOffset = {0,0};
+vec2 displayOffset = {0,1};
 
 void printBuffer(){
 
@@ -37,10 +37,10 @@ void printBuffer(){
 
     std::vector<std::vector<char>> Display;
     std::vector<char> displayRow;
-    for(int i = 0+5; i < y+5; i++){
-        for(int j = 0; j < x; j++){
-            if(j<fileBufferSort.at(y).size()-1){
-                displayRow.push_back(fileBufferSort.at(y).at(x));
+    for(int i = 0+displayOffset[1]; i < y+displayOffset[1]; i++){
+        for(int j = 0+displayOffset[0]; j < x+displayOffset[0]; j++){
+            if(i < MAXY-1 && j < fileBufferSort.at(i).size()){
+                displayRow.push_back(fileBufferSort.at(i).at(j));
             }
         }
         Display.push_back(displayRow);
@@ -65,7 +65,7 @@ void printBuffer(){
 
     color_set(1, 0);
 
-    mvprintw(cursor[1],cursor[0]," ");
+    mvprintw(cursor[1]-displayOffset[1],cursor[0]-displayOffset[0]," ");
 
     color_set(2, 0);
     mvprintw(y-1,0,"F1");
@@ -108,6 +108,9 @@ void runLoop(){
         switch(value_){
             case KEY_UP:
                 //up
+                if(cursor[1]-displayOffset[1]==0&&cursor[1]!=0){
+                    displayOffset[1]--;
+                }
                 if(cursor[1]>=1){
                     cursor[1]-=1;    
                     if(fileBufferSort.at(cursor[1]).size() == 1){
@@ -120,6 +123,9 @@ void runLoop(){
             break;
             case KEY_DOWN:
                 //down
+                if(cursor[1]-displayOffset[1]==y-2&&cursor[1]<MAXY-1){
+                    displayOffset[1]++;
+                }
                 if(cursor[1]<MAXY-1){
                     cursor[1]++;
                     if(fileBufferSort.at(cursor[1]).size() <= 1){
@@ -136,6 +142,9 @@ void runLoop(){
                     if((cursor[0]==fileBufferSort.at(cursor[1]).size()-2||(fileBufferSort.at(cursor[1]).size() == 1)&&cursor[1]+1<MAXY-1)){
                         cursor[0] = 0;
                         cursor[1] = cursor[1]+1;
+                        if(cursor[1]-displayOffset[1]==y-1&&cursor[1]<MAXY-1){
+                           displayOffset[1]++;
+                        }
                         break;
                     }
                     if(!(fileBufferSort.at(cursor[1]).size() <= 1)){
@@ -145,6 +154,9 @@ void runLoop(){
             break;
             case KEY_LEFT:
                 //left
+                if(cursor[0]<=0&&cursor[1]!=0){
+                    displayOffset[1]--;
+                }
                 if((cursor[0]==0||fileBufferSort.at(cursor[1]).size() == 1)&&cursor[1]-1>=0){
                     cursor[0] = fileBufferSort.at(cursor[1]-1).size()-2;
                     cursor[1] = cursor[1]-1;
@@ -285,7 +297,7 @@ int main(int argc, char *argv[])
 //transform file to strct aarray of struct array:
 //-> navigate                                           done
 //change buffer:
-//Display part of file                                      TODO --> another buffer (showes part of filebuffer)
+//Display part of file                                      TODO DC AND BACK_SPACE
 //scorle                                                    TODO
 //save buffer                                           DONE
 //del                                                   DONE
