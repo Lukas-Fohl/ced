@@ -7,6 +7,7 @@
 
 #include "readFile.cpp"
 #include "textBuffer.cpp"
+#include "sytnax.cpp"
 
 typedef int32_t vec3[3];
 typedef int32_t vec2[2];
@@ -65,7 +66,11 @@ void printBuffer(){
 
     color_set(1, 0);
 
-    mvprintw(cursor[1]-displayOffset[1],cursor[0]-displayOffset[0]," ");
+    if(fileBufferSort.at(cursor[1]).at(cursor[0])=='\n'){
+        mvprintw(cursor[1]-displayOffset[1],cursor[0]-displayOffset[0]," ");
+    }else{
+        mvprintw(cursor[1]-displayOffset[1],cursor[0]-displayOffset[0],"%c",fileBufferSort.at(cursor[1]).at(cursor[0]));
+    }
 
     color_set(2, 0);
     mvprintw(y-1,0,"F1");
@@ -184,6 +189,10 @@ void runLoop(){
                 cursor[0] = fileBufferSort.at(cursor[1]).size()-2;
             break;
             case KEY_DC:
+                if(fileBufferSort.at(cursor[1]).size() <= 1 && cursor[1]<MAXY-1){
+                    delLine(&fileBufferSort, cursor[1]);
+                    break;
+                }
                 if(cursor[0] == fileBufferSort.at(cursor[1]).size()-2 && cursor[1]<MAXY-1){
                     if(fileBufferSort.at(cursor[1]+1).size()==1){
                         delLine(&fileBufferSort,cursor[1]+1);       
@@ -201,20 +210,26 @@ void runLoop(){
                     delChar(&fileBufferSort.at(cursor[1]), cursor[0]-1);
                     cursor[0]--;
                 }else{
-                    if(cursor[1]>0){    
-                        if(fileBufferSort.at(cursor[1]).size()==1){
-                            delLine(&fileBufferSort,cursor[1]);   
-                            cursor[1]--;
-                            cursor[0] = fileBufferSort.at(cursor[1]).size()-2;
-                            break;
-                        }
-                        for(int i = 0; i < fileBufferSort.at(cursor[1]).size()-2; i++){
-                            addChar(&fileBufferSort.at(cursor[1]-1),fileBufferSort.at(cursor[1]).at(i),fileBufferSort.at(cursor[1]-1).size()-2);
-                        }
+                    if(fileBufferSort.at(cursor[1]).size()==1){
                         delLine(&fileBufferSort,cursor[1]);   
-                        cursor[1]--;
+                        //cursor[1]--;
+                        cursor[0] = fileBufferSort.at(cursor[1]).size()-2;
                         break;
                     }
+                    else if(fileBufferSort.at(cursor[1]).size()>1){
+                        if(fileBufferSort.at(cursor[1]-1).size()>1){
+                            for(int i = 0; i < fileBufferSort.at(cursor[1]).size()-1; i++){
+                                addChar(&fileBufferSort.at(cursor[1]-1),fileBufferSort.at(cursor[1]).at(i),fileBufferSort.at(cursor[1]-1).size()-1);
+                            }
+                        }else{
+                            for(int i = 0; i < fileBufferSort.at(cursor[1]).size()-1; i++){
+                                addChar(&fileBufferSort.at(cursor[1]-1),fileBufferSort.at(cursor[1]).at(i),fileBufferSort.at(cursor[1]-1).size()-1);
+                            }
+                        }
+                    }
+                    delLine(&fileBufferSort,cursor[1]);   
+                    //cursor[1]--;
+                    break;
                 }
             break;
             case '\t':
@@ -297,8 +312,8 @@ int main(int argc, char *argv[])
 //transform file to strct aarray of struct array:
 //-> navigate                                           done
 //change buffer:
-//Display part of file                                      TODO DC AND BACK_SPACE
-//scorle                                                    TODO
+//Display part of file                                  DONE
+//scorle                                                DONE
 //save buffer                                           DONE
 //del                                                   DONE
 //add                                                   DONE
@@ -311,3 +326,4 @@ int main(int argc, char *argv[])
 //->cut, copy, past, del                                    TODO
 //Line count                                                TODO
 //->jump???                                                 TODO
+//syntax                                                    TODO
