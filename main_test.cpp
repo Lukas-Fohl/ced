@@ -36,7 +36,7 @@ void printBuffer(){
 
     erase();
 
-    std::vector<std::vector<char>> display;
+    std::vector<std::vector<char>> Display;
     std::vector<char> displayRow;
     for(int i = 0+displayOffset[1]; i < y+displayOffset[1]; i++){
         for(int j = 0+displayOffset[0]; j < x+displayOffset[0]; j++){
@@ -44,7 +44,7 @@ void printBuffer(){
                 displayRow.push_back(fileBufferSort.at(i).at(j));
             }
         }
-        display.push_back(displayRow);
+            Display.push_back(displayRow);
         displayRow.clear();
     }
 
@@ -52,11 +52,9 @@ void printBuffer(){
     //change vector offset
     //check for size
 
-    for(int y_ = 0; y_ < display.size(); y_++){
-        for(int x_ = 0; x_ < display.at(y_).size(); x_++){
-            int currentPosition[] = {x_,y_};
-            color_set(setSyntaxColor(&display,currentPosition), 0);        
-            mvprintw(y_,x_,"%c",display.at(y_).at(x_));
+    for(int y_ = 0; y_ < Display.size(); y_++){
+        for(int x_ = 0; x_ < Display.at(y_).size(); x_++){
+            mvprintw(y_,x_,"%c",Display.at(y_).at(x_));
         }
     }
 
@@ -80,12 +78,12 @@ void printBuffer(){
     mvprintw(y-1,2,"TO EXIT");
     color_set(2, 0);
 
-    mvprintw(y-1,9,"F3");
+    mvprintw(y-1,9,"F2");
     color_set(1, 0);
     mvprintw(y-1,11,"TO SAVE");
     color_set(2, 0);
 
-    mvprintw(y-1,18,"F5");
+    mvprintw(y-1,18,"F3");
     color_set(1, 0);
     mvprintw(y-1,20,"TO SAVE AND EXIT");
     color_set(2, 0);
@@ -243,10 +241,10 @@ void runLoop(){
             case KEY_F(1):
                 running =  false;
             break;
-            case KEY_F(3):
+            case KEY_F(2):
                 writeToFile(&fileBufferSort, fileName);
             break;
-            case KEY_F(5):
+            case KEY_F(3):
                 writeToFile(&fileBufferSort, fileName);
                 running =  false;
             break;
@@ -279,10 +277,8 @@ int main(int argc, char *argv[])
     noecho();
     getmaxyx(stdscr, y, x);
 
-    init_pair(1, COLOR_BLACK, COLOR_WHITE); //normal text
-    init_pair(2, COLOR_WHITE, COLOR_BLACK); //cursor
-
-    //init_pair(3,...,...) -->for each type
+    init_pair(1, COLOR_BLACK, COLOR_WHITE);
+    init_pair(2, COLOR_WHITE, COLOR_BLACK);
 
     /********/
     //GET FILE
@@ -316,7 +312,7 @@ int main(int argc, char *argv[])
 //transform file to strct aarray of struct array:
 //-> navigate                                           done
 //change buffer:
-//display part of file                                  DONE
+//Display part of file                                  DONE
 //scorle                                                DONE
 //save buffer                                           DONE
 //del                                                   DONE
@@ -330,4 +326,3 @@ int main(int argc, char *argv[])
 //->cut, copy, past, del                                    TODO
 //Line count                                                TODO
 //->jump???                                                 TODO
-//syntax                                                    TODO
