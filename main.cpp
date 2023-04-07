@@ -20,7 +20,6 @@ char *fileName;
 void quit()
 {
     endwin();
-
 }
 
 vec2 cursor = {0,0};
@@ -55,7 +54,7 @@ void printBuffer(){
     for(int y_ = 0; y_ < display.size(); y_++){
         for(int x_ = 0; x_ < display.at(y_).size(); x_++){
             int currentPosition[] = {x_,y_};
-            color_set(setSyntaxColor(&displayRow,currentPosition), 0);        
+            color_set(setSyntaxColor(&displayRow,x_), 0);        
             mvprintw(y_,x_,"%c",display.at(y_).at(x_));
         }
     }
@@ -280,8 +279,16 @@ int main(int argc, char *argv[])
     noecho();
     getmaxyx(stdscr, y, x);
 
-    init_pair(1, COLOR_BLACK, COLOR_WHITE); //normal text
-    init_pair(2, COLOR_WHITE, COLOR_BLACK); //cursor
+    init_pair(1, COLOR_BLACK, COLOR_WHITE); //cursor
+    init_pair(2, COLOR_CYAN, COLOR_BLACK); //normal text
+
+    init_pair(5,COLOR_CYAN, COLOR_BLACK);
+    init_pair(6,COLOR_GREEN, COLOR_BLACK);
+    init_pair(7,COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(8,COLOR_YELLOW, COLOR_BLACK);
+    init_pair(9,COLOR_BLUE, COLOR_BLACK);
+
+    init_pair(0,COLOR_CYAN, COLOR_BLACK);
 
     //init_pair(3,...,...) -->for each type
 
