@@ -2,6 +2,13 @@
 #include <vector>
 #include <string>
 
-int setSyntaxColor(std::vector<std::vector<char>>* displayedText,int position[]){
+#include "textBuffer.hpp"
+
+void splitTextLine(textLine* textLineIn,std::vector<char> spliter){
+    
+}
+
+int setSyntaxColor(textLine* displayedText,int position){
+
     return 0;
 }

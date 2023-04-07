@@ -36,8 +36,8 @@ void printBuffer(){
 
     erase();
 
-    std::vector<std::vector<char>> display;
-    std::vector<char> displayRow;
+    fullTextBuffer display;
+    textLine displayRow;
     for(int i = 0+displayOffset[1]; i < y+displayOffset[1]; i++){
         for(int j = 0+displayOffset[0]; j < x+displayOffset[0]; j++){
             if(i < MAXY-1 && j < fileBufferSort.at(i).size()){
@@ -55,7 +55,7 @@ void printBuffer(){
     for(int y_ = 0; y_ < display.size(); y_++){
         for(int x_ = 0; x_ < display.at(y_).size(); x_++){
             int currentPosition[] = {x_,y_};
-            color_set(setSyntaxColor(&display,currentPosition), 0);        
+            color_set(setSyntaxColor(&displayRow,currentPosition), 0);        
             mvprintw(y_,x_,"%c",display.at(y_).at(x_));
         }
     }
@@ -252,6 +252,7 @@ void runLoop(){
             break;
             default:
                 addChar(&fileBufferSort.at(cursor[1]), value_, cursor[0]);
+                cursor[0]++;
             break;
         }
 
@@ -314,7 +315,7 @@ int main(int argc, char *argv[])
 
 //TODO:
 //transform file to strct aarray of struct array:
-//-> navigate                                           done
+//-> navigate                                           DONE
 //change buffer:
 //display part of file                                  DONE
 //scorle                                                DONE
@@ -331,3 +332,5 @@ int main(int argc, char *argv[])
 //Line count                                                TODO
 //->jump???                                                 TODO
 //syntax                                                    TODO
+//horizontal                                                TODO
+//file Navigation (fuzzy)                                   TODO
