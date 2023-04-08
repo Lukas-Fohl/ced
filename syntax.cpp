@@ -15,41 +15,38 @@ template <typename T>
 T contains(std::vector<T> vectorIn, T word_){
     return std::find(vectorIn.begin(),vectorIn.end(),word_);
 }
-/*
-std::vector<std::string>::iterator containsString(std::vector<std::string> vectorIn, std::string word_){
-    return std::find(vectorIn.begin(),vectorIn.end(),word_);
-}
-*/
 
 int setSyntaxColor(textLine* textLineIn,int position){
     std::vector<std::string> tempWords;
+    if(textLineIn->size()<=1){
+        return 2;
+    }
     std::string temp = "";
     char* actualWord;
     actualWord = (char*)calloc((textLineIn->size()),(sizeof(char*)));
-    for(int textLinePointer = position; textLinePointer < textLineIn->size(); textLinePointer++){
-        if(std::find(operators.begin(),operators.end(),std::string(1,textLineIn->at(textLinePointer))) != operators.end()){
-            //contains
+
+    for(int textLinePointer = position; textLinePointer <= textLineIn->size()-1; textLinePointer++){
+        if(containsString(operators,std::string(1,textLineIn->at(textLinePointer)))){
             break;
         }else{
-            //does not contain
-            //actualWord[position+textLinePointer] = textLineIn->at(textLinePointer);
+            actualWord[textLinePointer] = textLineIn->at(textLinePointer);
         }
     }
-    for(int textLinePointer = position; textLinePointer > 0; textLinePointer-=1){//here
-        if(std::find(operators.begin(),operators.end(),std::string(1,textLineIn->at(position-textLinePointer))) != operators.end()){
-            //contains
+    
+    for(int textLinePointer = position; textLinePointer >= 0; textLinePointer--){
+        if(containsString(operators,std::string(1,textLineIn->at(textLinePointer)))){
             break;
         }else{
-            //does not contain
-            actualWord[position-textLinePointer] = textLineIn->at(textLinePointer);
+            actualWord[textLinePointer] = textLineIn->at(textLinePointer);
         }
     }
-    /*
+
     for(int i = 0; i < sizeof(actualWord)/sizeof(char); i++){
         if(actualWord[i]!='\0'){
-            temp +=actualWord[i];
+            temp += actualWord[i];
         }
     }
+
     if(containsString(types,temp)){
         return 5;//type color
     }else if(containsString(containers,temp)){
@@ -62,12 +59,6 @@ int setSyntaxColor(textLine* textLineIn,int position){
         return 9;//loops color
     }
     else{
-        //does not contain
-        return 0;
+        return 2;
     }
-    */
-    return 0;
-    //get word from actual word
-    //check for word in vectors
-    //--> return color
 }

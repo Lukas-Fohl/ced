@@ -51,10 +51,20 @@ void printBuffer(){
     //change vector offset
     //check for size
 
+    init_pair(1, COLOR_BLACK, COLOR_WHITE); //cursor
+    init_pair(2, COLOR_WHITE, COLOR_BLACK); //normal text
+
+
+    init_pair(5,COLOR_CYAN, COLOR_BLACK);
+    init_pair(6,COLOR_GREEN, COLOR_BLACK);
+    init_pair(7,COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(8,COLOR_YELLOW, COLOR_BLACK);
+    init_pair(9,COLOR_BLUE, COLOR_BLACK);
+
     for(int y_ = 0; y_ < display.size(); y_++){
         for(int x_ = 0; x_ < display.at(y_).size(); x_++){
             int currentPosition[] = {x_,y_};
-            color_set(setSyntaxColor(&displayRow,x_), 0);        
+            attron(COLOR_PAIR(setSyntaxColor(&display.at(y_),x_)));
             mvprintw(y_,x_,"%c",display.at(y_).at(x_));
         }
     }
@@ -65,7 +75,7 @@ void printBuffer(){
     //    }
     //}
 
-    color_set(1, 0);
+    attron(COLOR_PAIR(1));
 
     if(fileBufferSort.at(cursor[1]).at(cursor[0])=='\n'){
         mvprintw(cursor[1]-displayOffset[1],cursor[0]-displayOffset[0]," ");
@@ -73,28 +83,28 @@ void printBuffer(){
         mvprintw(cursor[1]-displayOffset[1],cursor[0]-displayOffset[0],"%c",fileBufferSort.at(cursor[1]).at(cursor[0]));
     }
 
-    color_set(2, 0);
+    attron(COLOR_PAIR(2));
     mvprintw(y-1,0,"F1");
-    color_set(1, 0);
+    attron(COLOR_PAIR(1));
     mvprintw(y-1,2,"TO EXIT");
-    color_set(2, 0);
+    attron(COLOR_PAIR(2));
 
     mvprintw(y-1,9,"F3");
-    color_set(1, 0);
+    attron(COLOR_PAIR(1));
     mvprintw(y-1,11,"TO SAVE");
-    color_set(2, 0);
+    attron(COLOR_PAIR(2));
 
     mvprintw(y-1,18,"F5");
-    color_set(1, 0);
+    attron(COLOR_PAIR(1));
     mvprintw(y-1,20,"TO SAVE AND EXIT");
-    color_set(2, 0);
+    attron(COLOR_PAIR(2));
     
-    color_set(1, 0);
+    attron(COLOR_PAIR(1));
     mvprintw(y-1,x-7,"       ");
     mvprintw(y-1,x-7,"%d",cursor[0]);
     mvprintw(y-1,x-4,";");
     mvprintw(y-1,x-3,"%d",cursor[1]);
-    color_set(2, 0);
+    attron(COLOR_PAIR(2));
 
     refresh();
 }
@@ -278,19 +288,6 @@ int main(int argc, char *argv[])
     cbreak();
     noecho();
     getmaxyx(stdscr, y, x);
-
-    init_pair(1, COLOR_BLACK, COLOR_WHITE); //cursor
-    init_pair(2, COLOR_CYAN, COLOR_BLACK); //normal text
-
-    init_pair(5,COLOR_CYAN, COLOR_BLACK);
-    init_pair(6,COLOR_GREEN, COLOR_BLACK);
-    init_pair(7,COLOR_MAGENTA, COLOR_BLACK);
-    init_pair(8,COLOR_YELLOW, COLOR_BLACK);
-    init_pair(9,COLOR_BLUE, COLOR_BLACK);
-
-    init_pair(0,COLOR_CYAN, COLOR_BLACK);
-
-    //init_pair(3,...,...) -->for each type
 
     /********/
     //GET FILE
