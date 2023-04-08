@@ -17,14 +17,13 @@ T contains(std::vector<T> vectorIn, T word_){
 }
 
 int setSyntaxColor(textLine* textLineIn,int position){
-    std::vector<std::string> tempWords;
     if(textLineIn->size()<=1){
         return 2;
     }
     std::string temp = "";
     char* actualWord;
-    actualWord = (char*)calloc((textLineIn->size()),(sizeof(char*)));
-
+    actualWord = (char*)calloc((textLineIn->size()),(sizeof(char)));
+    
     for(int textLinePointer = position; textLinePointer <= textLineIn->size()-1; textLinePointer++){
         if(containsString(operators,std::string(1,textLineIn->at(textLinePointer)))){
             break;
@@ -32,7 +31,7 @@ int setSyntaxColor(textLine* textLineIn,int position){
             actualWord[textLinePointer] = textLineIn->at(textLinePointer);
         }
     }
-    
+
     for(int textLinePointer = position; textLinePointer >= 0; textLinePointer--){
         if(containsString(operators,std::string(1,textLineIn->at(textLinePointer)))){
             break;
@@ -59,6 +58,6 @@ int setSyntaxColor(textLine* textLineIn,int position){
         return 9;//loops color
     }
     else{
-        return 2;
+        return 7;
     }
 }

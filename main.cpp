@@ -63,9 +63,9 @@ void printBuffer(){
 
     for(int y_ = 0; y_ < display.size(); y_++){
         for(int x_ = 0; x_ < display.at(y_).size(); x_++){
-            int currentPosition[] = {x_,y_};
             attron(COLOR_PAIR(setSyntaxColor(&display.at(y_),x_)));
-            mvprintw(y_,x_,"%c",display.at(y_).at(x_));
+            mvaddch(y_,x_,display.at(y_).at(x_));
+            //mvprintw(y_,x_,"%c",display.at(y_).at(x_));
         }
     }
 
@@ -338,3 +338,5 @@ int main(int argc, char *argv[])
 //syntax                                                    TODO
 //horizontal                                                TODO
 //file Navigation (fuzzy)                                   TODO
+//del last char
+//new line in middel of line

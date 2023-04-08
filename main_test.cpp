@@ -5,7 +5,7 @@
 #include <vector>
 #include <stdarg.h>
 
-        ;int;for;char;
+        int;for;char;
 
 #include "readFile.cpp"
 #include "textBuffer.cpp"
