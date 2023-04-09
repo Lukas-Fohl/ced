@@ -58,6 +58,6 @@ int setSyntaxColor(textLine* textLineIn,int position){
         return 9;//loops color
     }
     else{
-        return 7;
+        return 2;
     }
 }

@@ -51,23 +51,38 @@ void printBuffer(){
     //change vector offset
     //check for size
 
+    init_color(COLOR_RED, 200, 200, 200);
+
     init_pair(1, COLOR_BLACK, COLOR_WHITE); //cursor
-    init_pair(2, COLOR_WHITE, COLOR_BLACK); //normal text
+    init_pair(2, COLOR_WHITE, COLOR_RED); //normal text
 
 
-    init_pair(5,COLOR_CYAN, COLOR_BLACK);
-    init_pair(6,COLOR_GREEN, COLOR_BLACK);
-    init_pair(7,COLOR_MAGENTA, COLOR_BLACK);
-    init_pair(8,COLOR_YELLOW, COLOR_BLACK);
-    init_pair(9,COLOR_BLUE, COLOR_BLACK);
+    init_pair(5,COLOR_CYAN, COLOR_RED);
+    init_pair(6,COLOR_GREEN, COLOR_RED);
+    init_pair(7,COLOR_MAGENTA, COLOR_RED);
+    init_pair(8,COLOR_YELLOW, COLOR_RED);
+    init_pair(9,COLOR_BLUE, COLOR_RED);
 
     for(int y_ = 0; y_ < display.size(); y_++){
-        for(int x_ = 0; x_ < display.at(y_).size(); x_++){
-            attron(COLOR_PAIR(setSyntaxColor(&display.at(y_),x_)));
-            mvaddch(y_,x_,display.at(y_).at(x_));
+        for(int x_ = 0; x_ < x; x_++){
+            if(x_< display.at(y_).size()-1){
+                if(display.at(y_).at(x_)=='\n'){
+                    attron(COLOR_PAIR(2));
+                    mvaddch(y_,x_,' ');
+                    continue;
+                }
+                attron(COLOR_PAIR(setSyntaxColor(&display.at(y_),x_)));
+                mvaddch(y_,x_,display.at(y_).at(x_));
+            }else{
+                attron(COLOR_PAIR(2));
+                mvaddch(y_,x_,' ');
+            }
             //mvprintw(y_,x_,"%c",display.at(y_).at(x_));
         }
     }
+
+    //TODO
+    //relative line numbers from cursor
 
     //for(int y_ = 0; y_ < fileBufferSort.size(); y_++){
     //    for(int x_ = 0; x_ < fileBufferSort.at(y_).size(); x_++){
@@ -186,8 +201,24 @@ void runLoop(){
                 }
             break;
             case '\n':
-                addLine(&fileBufferSort, cursor[1]);
-                cursor[1]++;
+                if(fileBufferSort.at(cursor[1]).size()-2 == cursor[0]){
+                    addLine(&fileBufferSort, cursor[1]+1);
+                    cursor[0] = 0;
+                    cursor[1]++;
+                }else if(cursor[0] <= 0){
+                    addLine(&fileBufferSort, cursor[1]);
+                    cursor[1]++;
+                }else{
+                    addLine(&fileBufferSort, cursor[1]+1);
+                    for(int i = cursor[0]; i < fileBufferSort.at(cursor[1]).size(); i++){
+                        addChar(&fileBufferSort.at(cursor[1]+1),fileBufferSort.at(cursor[1]).at(i),i-cursor[0]);
+                    }
+                    int temp = fileBufferSort.at(cursor[1]).size();
+                    for(int i = cursor[0]; i < temp; i++){
+                        delChar(&fileBufferSort.at(cursor[1]),cursor[0]);
+                    }
+                }
+
             break;
             case KEY_HOME:  
                 cursor[0] = 0;
@@ -218,7 +249,7 @@ void runLoop(){
             break;
             case KEY_BACKSPACE:
                 if(cursor[0]-1>=0){
-                    delChar(&fileBufferSort.at(cursor[1]), cursor[0]-1);
+                    delChar(&fileBufferSort.at(cursor[1]), cursor[0]);
                     cursor[0]--;
                 }else{
                     if(fileBufferSort.at(cursor[1]).size()==1){
@@ -338,5 +369,5 @@ int main(int argc, char *argv[])
 //syntax                                                    TODO
 //horizontal                                                TODO
 //file Navigation (fuzzy)                                   TODO
-//del last char
-//new line in middel of line
+//del last char                                         DONE
+//new line in middel of line                            DONE
