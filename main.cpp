@@ -30,6 +30,7 @@ int32_t x, y;
 bool running = true;
 
 vec2 displayOffset = {0,1};
+int screenOffset = 4;
 
 void printBuffer(){
 
@@ -37,8 +38,8 @@ void printBuffer(){
 
     fullTextBuffer display;
     textLine displayRow;
-    for(int i = 0+displayOffset[1]; i < y+displayOffset[1]; i++){
-        for(int j = 0+displayOffset[0]; j < x+displayOffset[0]; j++){
+    for(int i = displayOffset[1]; i < y-1+displayOffset[1]; i++){
+        for(int j = displayOffset[0]; j < x+displayOffset[0]; j++){
             if(i < MAXY-1 && j < fileBufferSort.at(i).size()){
                 displayRow.push_back(fileBufferSort.at(i).at(j));
             }
@@ -51,7 +52,7 @@ void printBuffer(){
     //change vector offset
     //check for size
 
-    init_color(COLOR_RED, 200, 200, 200);
+    init_color(COLOR_RED, 98, 114, 164);
 
     init_pair(1, COLOR_BLACK, COLOR_WHITE); //cursor
     init_pair(2, COLOR_WHITE, COLOR_RED); //normal text
@@ -63,39 +64,39 @@ void printBuffer(){
     init_pair(8,COLOR_YELLOW, COLOR_RED);
     init_pair(9,COLOR_BLUE, COLOR_RED);
 
+    screenOffset = std::to_string(displayOffset[1] + y).size()+1;
+
     for(int y_ = 0; y_ < display.size(); y_++){
-        for(int x_ = 0; x_ < x; x_++){
+        for(int x_ = 0; x_ < x-screenOffset; x_++){
             if(x_< display.at(y_).size()-1){
                 if(display.at(y_).at(x_)=='\n'){
                     attron(COLOR_PAIR(2));
-                    mvaddch(y_,x_,' ');
+                    mvaddch(y_,x_+screenOffset,' ');
                     continue;
                 }
                 attron(COLOR_PAIR(setSyntaxColor(&display.at(y_),x_)));
-                mvaddch(y_,x_,display.at(y_).at(x_));
+                mvaddch(y_,x_+screenOffset,display.at(y_).at(x_));
             }else{
                 attron(COLOR_PAIR(2));
-                mvaddch(y_,x_,' ');
+                mvaddch(y_,x_+screenOffset,' ');
             }
+            attron(COLOR_PAIR(2));
+            for(int i = 0; i < screenOffset-1; i++){
+                attron(COLOR_PAIR(2));
+                mvaddch(y_,i,' ');
+            }
+            mvprintw(y_,0,std::to_string((y_+displayOffset[1])).c_str());
             //mvprintw(y_,x_,"%c",display.at(y_).at(x_));
         }
     }
 
-    //TODO
-    //relative line numbers from cursor
-
-    //for(int y_ = 0; y_ < fileBufferSort.size(); y_++){
-    //    for(int x_ = 0; x_ < fileBufferSort.at(y_).size(); x_++){
-    //        mvprintw(y_,x_,"%c",fileBufferSort.at(y_).at(x_));
-    //    }
-    //}
-
     attron(COLOR_PAIR(1));
 
+    //cursor
     if(fileBufferSort.at(cursor[1]).at(cursor[0])=='\n'){
-        mvprintw(cursor[1]-displayOffset[1],cursor[0]-displayOffset[0]," ");
+        mvprintw(cursor[1]-displayOffset[1],cursor[0]-displayOffset[0]+screenOffset," ");
     }else{
-        mvprintw(cursor[1]-displayOffset[1],cursor[0]-displayOffset[0],"%c",fileBufferSort.at(cursor[1]).at(cursor[0]));
+        mvprintw(cursor[1]-displayOffset[1],cursor[0]-displayOffset[0]+screenOffset,"%c",fileBufferSort.at(cursor[1]).at(cursor[0]));
     }
 
     attron(COLOR_PAIR(2));
@@ -154,7 +155,7 @@ void runLoop(){
             break;
             case KEY_DOWN:
                 //down
-                if(cursor[1]-displayOffset[1]==y-2&&cursor[1]<MAXY-1){
+                if(cursor[1]-displayOffset[1]==y-2 && displayOffset[1]+y<MAXY){
                     displayOffset[1]++;
                 }
                 if(cursor[1]<MAXY-1){
@@ -185,7 +186,7 @@ void runLoop(){
             break;
             case KEY_LEFT:
                 //left
-                if(cursor[0]<=0&&cursor[1]!=0){
+                if(cursor[0]<=0&&displayOffset[1]!=0){
                     displayOffset[1]--;
                 }
                 if((cursor[0]==0||fileBufferSort.at(cursor[1]).size() == 1)&&cursor[1]-1>=0){
@@ -291,8 +292,8 @@ void runLoop(){
                 running =  false;
             break;
             default:
-                addChar(&fileBufferSort.at(cursor[1]), value_, cursor[0]);
                 cursor[0]++;
+                addChar(&fileBufferSort.at(cursor[1]), value_, cursor[0]);
             break;
         }
 
@@ -343,31 +344,40 @@ int main(int argc, char *argv[])
     //RUN EDITOR LOOP
     /***************/
 
+    //addLine(&fileBufferSort,fileBufferSort.size()-1);
+
     runLoop();
 
     return 0;
 }
 
 //TODO:
-//transform file to strct aarray of struct array:
-//-> navigate                                           DONE
-//change buffer:
-//display part of file                                  DONE
-//scorle                                                DONE
-//save buffer                                           DONE
-//del                                                   DONE
-//add                                                   DONE
-//save and exit text                                    DONE
-//keys                                                  DONE
-//enter file-name                                       DONE
-//Line interaction                                      DONE
-//support for shortcuts                                     TODO
-//mark                                                      TODO
-//->cut, copy, past, del                                    TODO
-//Line count                                                TODO
-//->jump???                                                 TODO
-//syntax                                                    TODO
-//horizontal                                                TODO
-//file Navigation (fuzzy)                                   TODO
-//del last char                                         DONE
-//new line in middel of line                            DONE
+/*
+transform file to strct aarray of struct array:
+ navigate                                           DONE
+change buffer:
+display part of file                                  DONE
+scorle                                                DONE
+save buffer                                           DONE
+del                                                   DONE
+add                                                   DONE
+save and exit text                                    DONE
+keys                                                  DONE
+enter file-name                                       DONE
+Line interaction                                      DONE
+support for shortcuts                                   TODO
+mark                                                    TODO
+cut, copy, past, del                                    TODO
+Line count                                            DONE
+jump???                                                 TODO
+syntax                                                  TODO
+horizontal                                              TODO
+file Navigation (fuzzy)                                 TODO
+del last char                                         DONE
+new line in middel of line                            DONE
+
+PROBLEMS:
+  LAST 2 LINES MISSING FOR SOME REASON
+  SYNTAX NOT WORKING AFTER 8 CHARS
+  NOT ABLE TO SCROLE TO THE END SOME HOW
+*/

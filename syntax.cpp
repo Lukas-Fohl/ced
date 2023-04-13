@@ -16,13 +16,21 @@ T contains(std::vector<T> vectorIn, T word_){
     return std::find(vectorIn.begin(),vectorIn.end(),word_);
 }
 
+bool containExact(std::vector<std::string> vectorIn, std::string word_){
+    for(int i = 0; i < vectorIn.size(); i++){
+        if(vectorIn.at(i) == word_){
+            return true;
+        }
+    }
+    return false;
+}
+
 int setSyntaxColor(textLine* textLineIn,int position){
     if(textLineIn->size()<=1){
         return 2;
     }
     std::string temp = "";
-    char* actualWord;
-    actualWord = (char*)calloc((textLineIn->size()),(sizeof(char)));
+    char* actualWord = (char*)calloc((textLineIn->size()),(sizeof(char)));
     
     for(int textLinePointer = position; textLinePointer <= textLineIn->size()-1; textLinePointer++){
         if(containsString(operators,std::string(1,textLineIn->at(textLinePointer)))){
@@ -46,15 +54,16 @@ int setSyntaxColor(textLine* textLineIn,int position){
         }
     }
 
-    if(containsString(types,temp)){
+    if(containExact(types,temp)){
         return 5;//type color
-    }else if(containsString(containers,temp)){
+    }else if(containExact(containers,temp)){
         return 6;//container color
-    }else if(containsString(modifiers,temp)){
+    }else if(containExact(modifiers,temp)){
         return 7;//modifiers color
-    }else if(containsString(flow,temp)){
+    }else if(containExact(flow,temp)){
         return 8;//flow color
-    }else if(containsString(loops,temp)){
+    }else if(containExact(loops,temp)){
+        //containsString(loop,temp);
         return 9;//loops color
     }
     else{
