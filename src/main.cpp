@@ -5,9 +5,10 @@
 #include <vector>
 #include <stdarg.h>
 
-#include "readFile.cpp"
+#include "fileInteraction.cpp"
 #include "textBuffer.cpp"
 #include "syntax.cpp"
+#include "navigation.cpp"
 
 typedef int32_t vec3[3];
 typedef int32_t vec2[2];
@@ -17,8 +18,7 @@ fullTextBuffer fileBufferSort;
 
 char *fileName;
  
-void quit()
-{
+void quit(){
     endwin();
 }
 
@@ -38,7 +38,7 @@ void printBuffer(){
 
     fullTextBuffer display;
     textLine displayRow;
-    for(int i = displayOffset[1]; i < y-1+displayOffset[1]; i++){
+    for(int i = displayOffset[1]; i < y-1+displayOffset[1]; i++){//out of range
         for(int j = displayOffset[0]; j < x+displayOffset[0]; j++){
             if(i < MAXY-1 && j < fileBufferSort.at(i).size()){
                 displayRow.push_back(fileBufferSort.at(i).at(j));
@@ -129,14 +129,26 @@ void runLoop(){
 
     printBuffer();
 
-    while(running)
-    {
+    while(running){
         refresh();
 
         //NAVIGATION
 
         auto value_ = getch();
 
+        /*
+        auto value_,
+        vec2 cursor,
+        vec2 displayOffset,
+        int32_t MAXY,
+        char *fileName,
+        bool running
+
+        change cursor
+        change displayOffset
+
+        access pointer to fileBufferSort
+        */
         switch(value_){
             case KEY_UP:
                 //up
@@ -144,7 +156,7 @@ void runLoop(){
                     displayOffset[1]--;
                 }
                 if(cursor[1]>=1){
-                    cursor[1]-=1;    
+                    cursor[1]-=1;
                     if(fileBufferSort.at(cursor[1]).size() == 1){
                         cursor[0] = 0;
                     }
@@ -221,7 +233,7 @@ void runLoop(){
                 }
 
             break;
-            case KEY_HOME:  
+            case KEY_HOME:
                 cursor[0] = 0;
             break;
             case KEY_END:
@@ -353,22 +365,31 @@ int main(int argc, char *argv[])
 
 //TODO:
 /*
+
+prio:
+    rewrite navigation
+        put into other file
+        simplify return
+    fix display gap
+        rewrite displayBuffer
+        display error - possible connection to navigation
+
 transform file to strct aarray of struct array:
- navigate                                           DONE
+navigate                                              DONE
 change buffer:
-display part of file                                  DONE
+display part of file                                    TODO
 scorle                                                DONE
 save buffer                                           DONE
-del                                                   DONE
-add                                                   DONE
-save and exit text                                    DONE
+del                                                     TODO
+add                                                     TODO
+save and exit text                                      TODO
 keys                                                  DONE
 enter file-name                                       DONE
-Line interaction                                      DONE
+Line interaction                                        TODO
 support for shortcuts                                   TODO
 mark                                                    TODO
 cut, copy, past, del                                    TODO
-Line count                                            DONE
+Line count                                              TODO
 jump???                                                 TODO
 syntax                                                  TODO
 horizontal                                              TODO

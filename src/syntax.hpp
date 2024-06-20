@@ -1,5 +1,5 @@
 #ifndef SYNTAX
-#define SYNTAX 1
+#define SYNTAX
 
 #include "textBuffer.hpp"
 

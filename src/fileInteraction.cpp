@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-#include "readFile.hpp"
+#include "fileInteraction.hpp"
 
 char* readFromFile(char* fileName){
     FILE *fp;

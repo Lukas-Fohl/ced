@@ -1,5 +1,5 @@
-#ifndef READ_FILE
-#define READ_FILE 1
+#ifndef FILE_INTERACTION_H
+#define FILE_INTERACTION_H
 
 #include "textBuffer.hpp"
 

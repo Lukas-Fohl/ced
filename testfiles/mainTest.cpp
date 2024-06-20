@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <vector>
-#include <string.h>
-
+#include <string.h>u
+xx
         int;for;#include
  
 #include "readFile.cpp 

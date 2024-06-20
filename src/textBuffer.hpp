@@ -1,5 +1,5 @@
 #ifndef TEXT_BUFFER
-#define TEXT_BUFFER 1
+#define TEXT_BUFFER
 
 #include <vector>
 
