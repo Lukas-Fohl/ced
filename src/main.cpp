@@ -29,7 +29,7 @@ int32_t x, y;
 
 bool running = true;
 
-vec2 displayOffset = {0,1};
+vec2 displayOffset = {0,0};
 int screenOffset = 4;
 
 void printBuffer(){
@@ -40,17 +40,13 @@ void printBuffer(){
     textLine displayRow;
     for(int i = displayOffset[1]; i < y-1+displayOffset[1]; i++){//out of range
         for(int j = displayOffset[0]; j < x+displayOffset[0]; j++){
-            if(i < MAXY-1 && j < fileBufferSort.at(i).size()){
+            if(i < MAXY && j < fileBufferSort.at(i).size()){
                 displayRow.push_back(fileBufferSort.at(i).at(j));
             }
         }
         display.push_back(displayRow);
         displayRow.clear();
     }
-
-    //--> diplay vector 
-    //change vector offset
-    //check for size
 
     init_color(COLOR_RED, 98, 114, 164);
 
@@ -66,15 +62,24 @@ void printBuffer(){
 
     screenOffset = std::to_string(displayOffset[1] + y).size()+1;
 
+    for(int x_ = 0; x_ < x; x_++){
+        for(int y_ = 0; y_ < y; y_++){
+            if(x_ != screenOffset-1 ){
+                attron(COLOR_PAIR(2));
+                mvaddch(y_,x_,' ');
+            }
+        }
+    }
+
     for(int y_ = 0; y_ < display.size(); y_++){
-        for(int x_ = 0; x_ < x-screenOffset; x_++){
+        for(int x_ = 0; x_ < display.at(y_).size(); x_++){
             if(x_< display.at(y_).size()-1){
                 if(display.at(y_).at(x_)=='\n'){
                     attron(COLOR_PAIR(2));
                     mvaddch(y_,x_+screenOffset,' ');
                     continue;
                 }
-                attron(COLOR_PAIR(setSyntaxColor(&display.at(y_),x_)));
+                attron(COLOR_PAIR(setSyntaxColor(&display.at(y_),x_)));;
                 mvaddch(y_,x_+screenOffset,display.at(y_).at(x_));
             }else{
                 attron(COLOR_PAIR(2));
@@ -105,14 +110,14 @@ void printBuffer(){
     mvprintw(y-1,2,"TO EXIT");
     attron(COLOR_PAIR(2));
 
-    mvprintw(y-1,9,"F3");
+    mvprintw(y-1,10,"F3");
     attron(COLOR_PAIR(1));
-    mvprintw(y-1,11,"TO SAVE");
+    mvprintw(y-1,12,"TO SAVE");
     attron(COLOR_PAIR(2));
 
-    mvprintw(y-1,18,"F5");
+    mvprintw(y-1,20,"F5");
     attron(COLOR_PAIR(1));
-    mvprintw(y-1,20,"TO SAVE AND EXIT");
+    mvprintw(y-1,22,"TO SAVE AND EXIT");
     attron(COLOR_PAIR(2));
     
     attron(COLOR_PAIR(1));
@@ -370,19 +375,16 @@ prio:
     rewrite navigation
         put into other file
         simplify return
-    fix display gap
-        rewrite displayBuffer
-        display error - possible connection to navigation
 
 transform file to strct aarray of struct array:
 navigate                                              DONE
 change buffer:
-display part of file                                    TODO
+display part of file                                  DONE
 scorle                                                DONE
 save buffer                                           DONE
 del                                                     TODO
 add                                                     TODO
-save and exit text                                      TODO
+save and exit text                                    DONE
 keys                                                  DONE
 enter file-name                                       DONE
 Line interaction                                        TODO
@@ -391,8 +393,8 @@ mark                                                    TODO
 cut, copy, past, del                                    TODO
 Line count                                              TODO
 jump???                                                 TODO
-syntax                                                  TODO
-horizontal                                              TODO
+syntax                                                DONE
+horizontal                                            DONE
 file Navigation (fuzzy)                                 TODO
 del last char                                         DONE
 new line in middel of line                            DONE

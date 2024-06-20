@@ -44,11 +44,11 @@ int setSyntaxColor(textLine* textLineIn,int position){
         if(containsString(operators,std::string(1,textLineIn->at(textLinePointer)))){
             break;
         }else{
-            actualWord[textLinePointer] = textLineIn->at(textLinePointer);
+                actualWord[textLinePointer] = textLineIn->at(textLinePointer);
         }
     }
 
-    for(int i = 0; i < sizeof(actualWord)/sizeof(char); i++){
+    for(int i = 0; i < textLineIn->size(); i++){
         if(actualWord[i]!='\0'){
             temp += actualWord[i];
         }
@@ -67,6 +67,10 @@ int setSyntaxColor(textLine* textLineIn,int position){
         return 9;//loops color
     }
     else{
+        if(textLineIn->at(position) == '\"'){
+            return 8;
+        }
         return 2;
     }
+    return 2;
 }
