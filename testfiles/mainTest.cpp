@@ -3,11 +3,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <vector>
-#include <string.h>u
-xx
-        int;for;#include
+#include <string.h>
  
-#include "readFile.cpp 
+       int;for;#include
+ 
+#include "readFile.cpp"
 #include "textBuffer.cpp"
 #include "syntax.cpp"
 
